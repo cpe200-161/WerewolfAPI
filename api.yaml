@@ -467,7 +467,7 @@ definitions:
         - "alive"
         - "offline"
         - "dead"
-        - "not in game"
+        - "idle"
   Role:
     type: "object"
     required:
@@ -539,6 +539,7 @@ definitions:
         type: "string"
         description: "Game status in the system"
         enum:
-        - "playing"
         - "waiting"
+        - "randoming"
+        - "playing"
         - "ended"
