@@ -1,545 +1,641 @@
-swagger: "2.0"
+swagger: '2.0'
 info:
-  description: "This is a werewolf game engine for REST access. It is primarily developed for CPE200 class at Computer Engineering, Chiang Mai University."
-  version: "0.1.0"
-  title: "Werewolf Engine"
-  #termsOfService: "http://swagger.io/terms/"
+  description: >-
+    This is a werewolf game engine for REST access. It is primarily developed
+    for CPE200 class at Computer Engineering, Chiang Mai University.
+  version: 0.1.0
+  title: Werewolf Engine
   contact:
-    email: "pruetboonma@gmail.com"
+    email: pruetboonma@gmail.com
   license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "project-ile.net:1038"
-basePath: "/v1"
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: 'project-ile.net:1038'
+basePath: /v1
 tags:
-- name: "player"
-  description: "Everything about your player."
-- name: "role"
-  description: "Game's role that will be play by each player."
-- name: "game"
-  description: "Individual game, either playing, played or ready to play."
+  - name: player
+    description: Everything about your player.
+  - name: role
+    description: Game's role that will be play by each player.
+  - name: game
+    description: 'Individual game, either playing, played or ready to play.'
 schemes:
-- "https"
-- "http"
+  - https
+  - http
 paths:
   /player:
+    get:
+      tags:
+        - player
+      summary: Get list of players
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Player'
+        '400':
+          description: Invalid input
     post:
       tags:
-      - "player"
-      summary: "Add a new player to the system"
-      description: ""
-      operationId: "addPlayer"
+        - player
+      summary: Add a new player to the system
+      description: ''
+      operationId: addPlayer
       consumes:
-      - "application/json"
+        - application/json
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - in: "body"
-        name: "body"
-        description: "Player object that needs to be added to the system"
-        required: true
-        schema:
-          $ref: "#/definitions/Player"
+        - in: body
+          name: body
+          description: Player object that needs to be added to the system
+          required: true
+          schema:
+            $ref: '#/definitions/Player'
       responses:
-        405:
-          description: "Invalid input"
+        '201' :
+          description: Player added successfully
+        '403':
+          description: Player already exists
+        '400':
+          description: Invalid input
     put:
       tags:
-      - "player"
-      summary: "Update an existing player"
-      description: ""
-      operationId: "updatePlayer"
+        - player
+      summary: Update an existing player
+      description: ''
+      operationId: updatePlayer
       consumes:
-      - "application/json"
+        - application/json
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - in: "body"
-        name: "body"
-        description: "Player object that needs to be added to the system"
-        required: true
-        schema:
-          $ref: "#/definitions/Player"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Player not found"
-        405:
-          description: "Validation exception"
-  /player/findByGame:
-    get:
-      tags:
-      - "player"
-      summary: "Finds Players by game"
-      operationId: "findPlayersByGame"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "status"
-        in: "query"
-        description: "Game hash that represent the game that players are in"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
+        - in: body
+          name: body
+          description: Player object that needs to be added to the system
+          required: true
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Player"
-        400:
-          description: "Invalid status value"
-    
-  /player/{playerId}:
-    get:
-      tags:
-      - "player"
-      summary: "Find player by ID"
-      description: "Returns a single player"
-      operationId: "getPlayerById"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "playerId"
-        in: "path"
-        description: "ID of player to return"
-        required: true
-        type: "integer"
-        format: "int64"
+            $ref: '#/definitions/Player'
       responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Player"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Player not found"
+        '200':
+          description: Update sucessfull
+        '400':
+          description: Invalid ID supplied
+  /player/login:
     post:
       tags:
-      - "player"
-      summary: "Updates a player in the system with form data"
-      description: ""
-      operationId: "updatePlayerWithForm"
+        - player
+      summary: Login into a player account
+      description: ''
+      operationId: loginPlayer
       consumes:
-      - "application/x-www-form-urlencoded"
+        - application/json
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: "playerId"
-        in: "path"
-        description: "ID of player that needs to be updated"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "name"
-        in: "formData"
-        description: "Updated name of the player"
-        required: false
-        type: "string"
-      - name: "password"
-        in: "formData"
-        description: "Updated password of the player"
-        required: false
-        type: "string"
-      - name: "status"
-        in: "formData"
-        description: "Updated status of the player"
-        required: false
-        type: "string"
+        - in: body
+          name: body
+          description: Player object that at least contains login/password
+          required: true
+          schema:
+            $ref: '#/definitions/Player'
       responses:
-        405:
-          description: "Invalid input"
+        '201':
+          description: Login Successfully
+          schema:
+            $ref: '#/definitions/Player'
+        '400':
+          description: Invalid input
+        '404':
+          description: Player not found or invalid password
+  '/player/logout/{sessionID}':
+    get:
+      tags:
+        - player
+      summary: Player logout
+      operationId: logoutPlayer
+      produces:
+        - application/json
+      parameters:
+        - name: sessionID
+          in: path
+          description: ID of player's session to logout
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Player'
+        '404':
+          description: Invalid input
+  /player/findByGame/{gameID}:
+    get:
+      tags:
+        - player
+      summary: Finds Players by game
+      operationId: findPlayersByGame
+      produces:
+        - application/json
+      parameters:
+        - name: gameID
+          in: path
+          description: Game id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Player'
+        '404':
+          description: Invalid game id
+  '/player/{playerId}':
+    get:
+      tags:
+        - player
+      summary: Find player by ID
+      description: Returns a single player
+      operationId: getPlayerById
+      produces:
+        - application/json
+      parameters:
+        - name: playerId
+          in: path
+          description: ID of player to return
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Player'
+        '404':
+          description: Player not found
     delete:
       tags:
-      - "player"
-      summary: "Deletes a player"
-      description: ""
-      operationId: "deletePlayer"
+        - player
+      summary: Deletes a player
+      description: ''
+      operationId: deletePlayer
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: "playerId"
-        in: "path"
-        description: "Player id to delete"
-        required: true
-        type: "integer"
-        format: "int64"
+        - name: playerId
+          in: path
+          description: Player id to delete
+          required: true
+          type: integer
+          format: int64
       responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Player not found"
+        '200':
+          description: Player deleted
+        '404':
+          description: Player not found
   /role:
     get:
       tags:
-      - "role"
-      summary: "Get list of roles"
+        - role
+      summary: Get list of roles
       produces:
-      - "application/json"
+        - application/json
       responses:
-        200:
-          description: "successful operation"
+        '200':
+          description: successful operation
           schema:
-            type: "array"
+            type: array
             items:
-              $ref: "#/definitions/Role"
-        405:
-          description: "Invalid input"
-  /role/{roleId}:
+              $ref: '#/definitions/Role'
+        '400':
+          description: Invalid input
+  '/role/{roleId}':
     get:
       tags:
-      - "role"
-      summary: "Find role by ID"
-      description: "Returns a single role"
-      operationId: "getRoleById"
+        - role
+      summary: Find role by ID
+      description: Returns a single role
+      operationId: getRoleById
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: "roleId"
-        in: "path"
-        description: "ID of role to return"
-        required: true
-        type: "integer"
-        format: "int64"
+        - name: roleId
+          in: path
+          description: ID of role to return
+          required: true
+          type: integer
+          format: int64
       responses:
-        200:
-          description: "successful operation"
+        '200':
+          description: successful operation
           schema:
-            $ref: "#/definitions/Role"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Role not found"
+            $ref: '#/definitions/Role'
+        '400':
+          description: Invalid ID supplied
   /action:
     get:
       tags:
-      - "action"
-      summary: "Get list of actions"
+        - action
+      summary: Get list of actions
       produces:
-      - "application/json"
+        - application/json
       responses:
-        200:
-          description: "successful operation"
+        '200':
+          description: successful operation
           schema:
-            type: "array"
+            type: array
             items:
-              $ref: "#/definitions/Action"
-        405:
-          description: "Invalid input"
-  /action/{actionID}:
+              $ref: '#/definitions/Action'
+        '400':
+          description: Invalid input
+  '/action/{actionID}':
     get:
       tags:
-      - "action"
-      summary: "Find action by ID"
-      description: "Returns a single action"
-      operationId: "getActionById"
+        - action
+      summary: Find action by ID
+      description: Returns a single action
+      operationId: getActionById
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: "actionID"
-        in: "path"
-        description: "ID of action to return"
-        required: true
-        type: "integer"
-        format: "int64"
+        - name: actionID
+          in: path
+          description: ID of action to return
+          required: true
+          type: integer
+          format: int64
       responses:
-        200:
-          description: "successful operation"
+        '200':
+          description: successful operation
           schema:
-            $ref: "#/definitions/Action"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Action not found"
-        405:
-          description: "Action not allow"
-  /action/findByRole:
+            $ref: '#/definitions/Action'
+        '400':
+          description: Invalid ID supplied
+  /action/findByRole/{roleId}:
     get:
       tags:
-      - "player"
-      summary: "Finds actions by role"
-      operationId: "findActionsByRole"
+        - action
+      summary: Finds actions by roleId
+      operationId: findActionsByRoleId
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: "role"
-        in: "query"
-        description: "Role Id to find actions"
-        required: true
-        type: "integer"
-        format: "int64"
+        - name: roleId
+          in: path
+          description: Role Id to find actions
+          required: true
+          type: integer
+          format: int64
       responses:
-        200:
-          description: "successful operation"
+        '200':
+          description: successful operation
           schema:
-            type: "array"
+            type: array
             items:
-              $ref: "#/definitions/Role"
-        400:
-          description: "Invalid role Id value"
+              $ref: '#/definitions/Role'
+        '400':
+          description: Invalid role Id value
   /game:
     get:
       tags:
-      - "game"
-      summary: "Get list of games"
+        - game
+      summary: Get list of games
       produces:
-      - "application/json"
+        - application/json
       responses:
-        200:
-          description: "successful operation"
+        '200':
+          description: successful operation
           schema:
-            type: "array"
+            type: array
             items:
-              $ref: "#/definitions/Game"
-        405:
-          description: "Invalid input"
-  /game/{gameId}:
+              $ref: '#/definitions/Game'
+        '400':
+          description: Invalid input
+  '/game/{gameId}':
     get:
       tags:
-      - "game"
-      summary: "Find game by ID"
-      description: "Returns a single game"
-      operationId: "getGameById"
+        - game
+      summary: Find game by ID
+      description: Returns a single game
+      operationId: getGameById
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: "gameId"
-        in: "path"
-        description: "ID of game to return"
-        required: true
-        type: "integer"
-        format: "int64"
+        - name: gameId
+          in: path
+          description: ID of game to return
+          required: true
+          type: integer
+          format: int64
       responses:
-        200:
-          description: "successful operation"
+        '200':
+          description: successful operation
           schema:
-            $ref: "#/definitions/Game"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Game not found"
-  /game/join/{playerID}:
+            $ref: '#/definitions/Game'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Game not found
+  '/game/session/{sessionID}':
     get:
       tags:
-      - "game"
-      summary: "Join a game"
-      description: "Join an available game as a player"
+        - game
+      summary: Get game session
+      description: Get game session information
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: "playerID"
-        in: "path"
-        description: "ID of player to join game"
-        required: true
-        type: "integer"
-        format: "int64"
+        - name: sessionID
+          in: path
+          description: ID of player'session to get game information
+          required: true
+          type: string
       responses:
-        200:
-          description: "successful operation"
+        '200':
+          description: successful operation
           schema:
-            $ref: "#/definitions/Game"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Player not found"
-  /game/action/{gameID}/{playerID}/{actionID}:
+            $ref: '#/definitions/Game'
+        '400':
+          description: Invalid session 
+        '404':
+          description: Game not found
     post:
       tags:
-      - "game"
-      summary: "Perform action on a game"
-      description: "Perform action of a user on a game"
+        - game
+      summary: Join a game
+      description: Join an available game as a player
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: "gameID"
-        in: "path"
-        description: "ID of game to perform action"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "playerID"
-        in: "path"
-        description: "ID of player to perform action"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "actionID"
-        in: "path"
-        description: "ID of action to perform"
-        required: true
-        type: "integer"
-        format: "int64"
+        - name: sessionID
+          in: path
+          description: ID of player'session to join game
+          required: true
+          type: string
       responses:
-        200:
-          description: "successful operation"
+        '201':
+          description: successful operation
           schema:
-            $ref: "#/definitions/Game"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Player/Action/Game not found"
-  /chat/{gameID}:
+            $ref: '#/definitions/Game'
+        '400':
+          description: Invalid data
+        '404':
+          description: Player not found
+    delete:
+      tags:
+        - game
+      summary: Leave a game
+      description: Leave   game as a player
+      produces:
+        - application/json
+      parameters:
+        - name: sessionID
+          in: path
+          description: ID of player'session to leave game
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Game'
+        '400':
+          description: Invalid ID supplied
+    
+  '/game/action/{sessionID}/{actionID}/{targetID}':
     post:
       tags:
-      - "chat"
-      summary: "Post a message to game"
-      description: "Post a message to game"
+        - game
+      summary: Perform action on a game
+      description: Perform action of a user on a game
+      produces:
+        - application/json
+      parameters:
+        - name: sessionID
+          in: path
+          description: ID of player'session to perform action
+          required: true
+          type: string
+        - name: actionID
+          in: path
+          description: ID of action to perform
+          required: true
+          type: integer
+          format: int64
+        - name: targetID
+          in: path
+          description: ID of target of the action
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '201':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Game'
+        '400':
+          description: Invalid ID supplied, check error response
+  '/chat/{gameID}/{sessionID}':
+    post:
+      tags:
+        - chat
+      summary: Post a message to game
+      description: Post a message to game
       consumes:
-      - "application/json"
+        - application/json
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: "gameID"
-        in: "path"
-        description: "ID of game to perform action"
-        required: true
-        type: "integer"
-        format: "int64"
-      - in: "body"
-        name: "body"
-        description: "Chat message object to post to the game"
-        required: true
-        schema:
-          $ref: "#/definitions/ChatMessage"
+        - name: gameID
+          in: path
+          description: ID of game to perform action
+          required: true
+          type: integer
+          format: int64
+        - name: sessionID
+          in: path
+          description: ID of player'session to perform chat
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Chat message object to post to the game
+          required: true
+          schema:
+            $ref: '#/definitions/ChatMessage'
       responses:
-        200:
-          description: "successful operation"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Game not found"
-  /chat/{gameID}/{chatID}:
+        '200':
+          description: successful operation
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Game not found
+  '/chat/{gameID}/{sessionID}/{chatID}':
     get:
       tags:
-      - "chat"
-      summary: "Retrieve list of chat messages"
+        - chat
+      summary: Retrieve list of chat messages
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - name: "gameID"
-        in: "path"
-        description: "ID of game to perform action"
-        required: true
-        type: "integer"
-      - name: "chatID"
-        in: "path"
-        description: "First chat message ID to retrieve"
-        required: true
-        type: "integer"
+        - name: gameID
+          in: path
+          description: ID of game to perform action
+          required: true
+          type: integer
+        - name: sessionID
+          in: path
+          description: ID of player'session to perform chat
+          required: true
+          type: string
+        - name: chatID
+          in: path
+          description: First chat message ID to retrieve
+          required: true
+          type: integer
       responses:
-        200:
-          description: "successful operation"
+        '200':
+          description: successful operation
           schema:
-            type: "array"
+            type: array
             items:
-              $ref: "#/definitions/ChatMessage"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Player/Action/Game not found"
+              $ref: '#/definitions/ChatMessage'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Player/Action/Game not found
 definitions:
   Player:
-    type: "object"
+    type: object
     required:
-    - "name"
-    - "password"
-    - "status"
+      - name
+      - password
+      - status
     properties:
       id:
-        type: "integer"
-        format: "int64"
+        type: integer
+        format: int64
       name:
-        type: "string"
-        example: "Anonymous Coward"
+        type: string
+        example: Anonymous Coward
       password:
-        type: "string"
+        type: string
       game:
-        type: "string"
+        $ref: '#/definitions/Game'
       role:
-        type: "integer"
-        format: "int64"
+        $ref: '#/definitions/Role'
+      session:
+        type: string
       status:
-        type: "string"
-        description: "Player status in a game"
+        type: string
+        description: Player status in a game
         enum:
-        - "alive"
-        - "offline"
-        - "dead"
-        - "idle"
+          - alive
+          - offline
+          - not in game
+          - votedead
+          - shotdead
+          - jaildead
+          - holydead
+          - killdead
   Role:
-    type: "object"
+    type: object
     required:
-    - "name"
+      - name
     properties:
       id:
-        type: "integer"
-        format: "int64"
+        type: integer
+        format: int64
       name:
-        type: "string"
-        example: "Villager"
+        type: string
+        example: Werewolf
       description:
-        type: "string"
+        type: string
+      actions:
+        type: array
+        items:
+          $ref: '#/definitions/Action'
+      type:
+        type: string
+        enum:
+          - Villager
+          - Wolf
+          - Neutral
   Action:
-    type: "object"
+    type: object
     required:
-    - "name"
+      - name
     properties:
       id:
-        type: "integer"
-        format: "int64"
+        type: integer
+        format: int64
       name:
-        type: "string"
-        example: "Vote"
-      role:
-        type: "array"
+        type: string
+        example: Vote
+      roles:
+        type: array
         items:
-          $ref: "#/definitions/Role"
+          $ref: '#/definitions/Role'
       description:
-        type: "string"
+        type: string
   ChatMessage:
-    type: "object"
+    type: object
     required:
-    - "message"
+      - message
     properties:
       id:
-        type: "integer"
-        format: "int64"
+        type: integer
+        format: int64
       player:
-        $ref: "#/definitions/Player"
+        $ref: '#/definitions/Player'
       message:
-        type: "string"
+        type: string
       channel:
-        type: "string"
-        description: "Chat channel"
+        type: string
+        description: Chat channel
         enum:
-        - "nighttime"
-        - "daytime"
+          - nighttime
+          - daytime
   Game:
-    type: "object"
+    type: object
     properties:
       id:
-        type: "integer"
-        format: "int64"
+        type: integer
+        format: int64
       hash:
-        type: "string"
+        type: string
       day:
-        type: "integer"
-        format: "int8"
-      players:
-        type: "array"
-        items:
-          $ref: "#/definitions/Player"
-      time:
-        enum:
-        - "nighttime"
-        - "daytime"
+        type: integer
+        format: int8
       status:
-        type: "string"
-        description: "Game status in the system"
+        type: string
+        description: Game status in the system
         enum:
-        - "waiting"
-        - "randoming"
-        - "playing"
-        - "ended"
+          - playing
+          - waiting
+          - ended
+      period:
+        enum:
+          - day
+          - night
+          - processing
+      outcome:
+        enum:
+          - villagerwin
+          - werewolfwin
+          - foolwin
+          - headhunterwin
+          - serialkillerwin
+          - nowin
+      players:
+        type: array
+        items:
+          $ref: '#/definitions/Player'
