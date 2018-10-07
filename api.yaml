@@ -59,6 +59,8 @@ paths:
       responses:
         '201' :
           description: Player added successfully
+          schema:
+            $ref: '#/definitions/Player'
         '403':
           description: Player already exists
         '400':
@@ -300,7 +302,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Role'
+              $ref: '#/definitions/Action'
         '400':
           description: Invalid role Id value
   /game:

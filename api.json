@@ -83,7 +83,10 @@
         ],
         "responses": {
           "201": {
-            "description": "Player added successfully"
+            "description": "Player added successfully",
+            "schema": {
+              "$ref": "#/definitions/Player"
+            }
           },
           "400": {
             "description": "Invalid input"
@@ -445,7 +448,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/Role"
+                "$ref": "#/definitions/Action"
               }
             }
           },
