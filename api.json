@@ -870,6 +870,27 @@
         },
         "description": {
           "type": "string"
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "Target Dead",
+            "Player Dead",
+            "Other Player Dead",
+            "Nothing Happened",
+            "Action Performed",
+            "Enchanted",
+            "Jailed",
+            "Revealed",
+            "Unknown",
+            "Werewolf",
+            "Villager",
+            "Not Valid Action",
+            "Target Is Not Alived"
+          ]
+        },
+        "target": {
+          "type": "string"
         }
       }
     },

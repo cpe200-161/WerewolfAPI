@@ -57,14 +57,14 @@ paths:
           schema:
             $ref: '#/definitions/Player'
       responses:
-        '201' :
+        '201':
           description: Player added successfully
           schema:
             $ref: '#/definitions/Player'
-        '403':
-          description: Player already exists
         '400':
           description: Invalid input
+        '403':
+          description: Player already exists
     put:
       tags:
         - player
@@ -137,7 +137,7 @@ paths:
               $ref: '#/definitions/Player'
         '404':
           description: Invalid input
-  /player/findByGame/{gameID}:
+  '/player/findByGame/{gameID}':
     get:
       tags:
         - player
@@ -281,7 +281,7 @@ paths:
             $ref: '#/definitions/Action'
         '400':
           description: Invalid ID supplied
-  /action/findByRole/{roleId}:
+  '/action/findByRole/{roleId}':
     get:
       tags:
         - action
@@ -366,7 +366,7 @@ paths:
           schema:
             $ref: '#/definitions/Game'
         '400':
-          description: Invalid session 
+          description: Invalid session
         '404':
           description: Game not found
     post:
@@ -411,7 +411,6 @@ paths:
             $ref: '#/definitions/Game'
         '400':
           description: Invalid ID supplied
-    
   '/game/action/{sessionID}/{actionID}/{targetID}':
     post:
       tags:
@@ -444,7 +443,7 @@ paths:
           schema:
             $ref: '#/definitions/Game'
         '400':
-          description: Invalid ID supplied, check error response
+          description: 'Invalid ID supplied, check error response'
   '/chat/{gameID}/{sessionID}':
     post:
       tags:
@@ -587,6 +586,24 @@ definitions:
         items:
           $ref: '#/definitions/Role'
       description:
+        type: string
+      outcome:
+        type: string
+        enum:
+          - Target Dead
+          - Player Dead
+          - Other Player Dead
+          - Nothing Happened
+          - Action Performed
+          - Enchanted
+          - Jailed
+          - Revealed
+          - Unknown
+          - Werewolf
+          - Villager
+          - Not Valid Action
+          - Target Is Not Alived
+      target:
         type: string
   ChatMessage:
     type: object
