@@ -771,7 +771,8 @@
             "in": "path",
             "description": "First chat message ID to retrieve, 0 for all message",
             "required": true,
-            "type": "integer"
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "responses": {

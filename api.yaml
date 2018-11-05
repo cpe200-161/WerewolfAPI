@@ -135,10 +135,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Player'
-        '404':
-          description: player not found
         '400':
           description: Invalid data
+        '404':
+          description: player not found
   '/player/findByGame/{gameID}':
     get:
       tags:
@@ -462,7 +462,6 @@ paths:
           description: Processing period
         '410':
           description: Game not playable
-        
   '/chat/{sessionID}':
     post:
       tags:
@@ -513,9 +512,10 @@ paths:
           type: string
         - name: chatID
           in: path
-          description: First chat message ID to retrieve, 0 for all message
+          description: 'First chat message ID to retrieve, 0 for all message'
           required: true
           type: integer
+          format: int64
       responses:
         '200':
           description: successful operation
