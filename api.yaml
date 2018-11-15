@@ -633,16 +633,19 @@ definitions:
       id:
         type: integer
         format: int64
-      player:
-        $ref: '#/definitions/Player'
+      playerid:
+        type: integer
+        format: int64
       message:
         type: string
       channel:
         type: string
         description: Chat channel
         enum:
-          - nighttime
-          - daytime
+          - wolf
+          - village
+          - jail
+          - dead
   Game:
     type: object
     properties:
