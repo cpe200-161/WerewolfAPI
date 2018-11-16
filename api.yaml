@@ -633,6 +633,9 @@ definitions:
       id:
         type: integer
         format: int64
+      gameid:
+        type: integer
+        format: int64
       playerid:
         type: integer
         format: int64
