@@ -496,7 +496,7 @@ paths:
         '405':
           description: Player is not in game
         '406':
-          description: Player is not in game
+          description: Player is not allow to chat now
   '/chat/{sessionID}/{chatID}':
     get:
       tags:
